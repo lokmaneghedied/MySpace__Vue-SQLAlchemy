@@ -1,5 +1,5 @@
 <template>
-    <div class="container p-2 w-1/3 h-2/3 rounded-lg bg-white shadow-2xl divide-y-2 space-y-3">
+    <div class="container p-2 w-3/4 rounded-lg bg-white shadow-2xl divide-y-2 space-y-3 md:w-1/3 md:h-2/3">
         <div class="flex justify-between">
             <div>
                 <h1 class="font-bold">Sign Up</h1>

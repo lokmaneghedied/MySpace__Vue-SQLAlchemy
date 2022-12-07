@@ -1,5 +1,5 @@
 <template>
-  <div class="font-serif bg-blue-100 h-screen flex justify-center place-items-center	">
+  <div class="flex justify-center place-items-center font-serif bg-blue-100 min-h-screen">
     <CreateNew @goBack="goBack" @newUser="create" />
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
       router.push({path:'/'})
     },
     create(user) {   
-      router.push({ name: 'Users', params:{email:user.email} })
+      router.push({ name: 'User', params:{email:user.email} })
     }
   }
 }

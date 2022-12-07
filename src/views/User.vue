@@ -1,13 +1,13 @@
 <template>
-    <div class="font-serif bg-blue-100 h-screen">
+    <div class="font-serif bg-blue-100 min-h-screen">
         <header class="border border-gray-200 shadow-xl text-blue-600 bg-white flex justify-between">
-            <span class="p-2 text-2xl font-bold">{{$route.params.email}}</span>
+            <span class="p-2 truncate font-bold w-1/4 text-xs lg:text-xl">{{$route.params.email}}</span>
             <span>
                 <span v-if="!x">
-                    <button class="btn bg-blue-500" @click="show">New Post</button>
+                    <button class="btn bg-blue-500 text-xs" @click="show">New Post</button>
                 </span>
-                <button class="btn bg-black" @click="logout">Log Out</button>
-            </span>
+                <button class="btn bg-black text-xs" @click="logout">Log Out</button>
+            </span> 
         </header>
         <div class="flex justify-center">
             <Posts class="block" :posts="this.posts" @newPost="newPost" @close="close" @comment="addComment" @liked="like" @id="newComment" :y="this.y" :x="this.x" />

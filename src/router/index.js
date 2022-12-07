@@ -12,9 +12,9 @@ const routes = [
     component: () => import('../views/NewAccount.vue')
   },
    {
-    path: '/users/:email',
-    name: 'Users',
-    component: () => import('../views/Users.vue')
+    path: '/user/:email',
+    name: 'User',
+    component: () => import('../views/User.vue')
   }
 ]
 

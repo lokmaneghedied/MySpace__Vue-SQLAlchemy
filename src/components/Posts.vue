@@ -1,12 +1,12 @@
 <template>
     <div class="block p-2 space-y-4 w-4/5 ">
         <div :key="post.title" v-for="post in posts">
-            <div class="bg-gray-50 border rounded border-gray-100 shadow-sm divide-y " >
+            <div class="bg-gray-50 border rounded border-gray-100 shadow-sm divide-y" >
                 <div class="p-2" >
-                    <h1 class="pr-4 text-2xl font-semibold ">{{post.title}}</h1>
-                    <p class="text-lg break-all">{{post.content}}</p>
+                    <h1 class="text-base md:text-2xl pr-4 font-semibold ">{{post.title}}</h1>
+                    <p class="text-sm md:text-lg break-all">{{post.content}}</p>
                 </div>
-                <div class="flex justify-start"> 
+                <div class="flex justify-start text-xs lg:text-lg"> 
                     <span :class="{'myclass':post.status}" class="flex p-1 m-1 rounded-lg text-center cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                 class="w-6 h-6">
@@ -27,7 +27,7 @@
             </div>
             <div v-if="(post.comments.length > 0)" >
                 <span :key="comment" v-for="comment in post.comments">
-                    <p class="px-2 bg-gray-200 rounded-full mt-0.5 mb-1">{{comment}}</p>
+                    <p class="text-xs lg:text-sm  px-2 bg-gray-200 rounded-full mt-0.5 mb-1">{{comment}}</p>
                 </span>
             </div>
         </div>
