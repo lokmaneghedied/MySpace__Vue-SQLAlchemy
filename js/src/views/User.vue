@@ -10,7 +10,7 @@
             </span> 
         </header>
         <div class="flex justify-center">
-            <Posts class="block" :posts="this.posts" @newPost="newPost" @close="close" @comment="addComment" @liked="like" @id="newComment" :y="this.y" :x="this.x" />
+            <Posts class="block" :posts="this.posts" @newPost="newPost" @close="close" @comment="addComment" @liked="like" @id="newComment" :newCommentSection="this.newCommentSection" :newPostSection="this.newPostSection" />
         </div>
     </div>
 </template>
@@ -24,8 +24,8 @@ export default {
     data() {
         return {
             posts: [],
-            x: false,
-            y: false,
+            newPostSection: false,
+            newCommentSection: false,
             id: '',
         }
     },
@@ -35,16 +35,16 @@ export default {
     methods: {
         newPost(post) {
             this.posts.push(post)
-            this.x=!this.x
+            this.newPostSection = !this.newPostSection
         },
         show() {
-            this.x = !this.x
+            this.newPostSection = !this.newPostSection
         },
         close() {
-            this.x = !this.x
+            this.newPostSection = !this.newPostSection
         },
         newComment(id) {
-            this.y = !this.y
+            this.newCommentSection = !this.newCommentSection
             this.id = id
         },
         addComment(ncomment) {
@@ -53,7 +53,7 @@ export default {
                     post.comments.push(ncomment)
                 }
             })
-            this.y = !this.y
+            this.newCommentSection = !this.newCommentSection
         },
         logout() {
             router.push({ path: '/' })

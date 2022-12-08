@@ -31,7 +31,7 @@
                 </span>
             </div>
         </div>
-        <div v-if="x">
+        <div v-if="newPostSection">
             <form @submit.prevent="post">
                 <div class="grid justify-items-stretch space-y-1">
                     <input class="p-1 m-2 border border-gray-200 rounded-lg" type="text" placeholder="Title" v-model="title">
@@ -43,7 +43,7 @@
                 </div>
             </form>
         </div>
-        <div v-if="y">
+        <div v-if="newCommentSection">
             <form @submit.prevent="add">
                 <div class="flex justify-center">
                     <textarea class="p-1 m-2 w-2/3 border border-gray-200 rounded-lg" type="text" placeholder="Write a comment..." v-model="comment"></textarea>
@@ -66,8 +66,8 @@ export default {
     },
     props: {
         posts: Array,
-        x: Boolean,
-        y: Boolean,
+        newPostSection: Boolean,
+        newCommentSection: Boolean,
     },
     methods:{
         post(){
