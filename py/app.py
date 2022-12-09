@@ -55,5 +55,33 @@ def newPost():
     return "h"
 
 
+@app.route('/posts/delete/<int:id>', methods=["GET", "DELETE"])
+@cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
+def delete(id):
+    post = Post.query.get(id)
+    db.session.delete(post)
+    db.session.commit()
+    return 'h'
+
+
+@app.route('/posts/editlike/<int:id>', methods=["GET", "PUT"])
+@cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
+def like(id):
+    post = Post.query.get(id)
+    post.status = not post.status
+    db.session.commit()
+    return 'h'
+
+
+@app.route('/posts/editcomment/', methods=["GET", "PUT"])
+@cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
+def comment():
+    id = request.get_json(force=True)['id']
+    post = Post.query.get(id)
+    post.comment = post.comment + '/' + request.get_json(force=True)['comment']
+    db.session.commit()
+    return 'h'
+
+
 if __name__ == "__main__":
     app.run(debug=True)

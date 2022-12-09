@@ -10,7 +10,7 @@
             </span> 
         </header>
         <div class="flex justify-center">
-            <Posts class="block" :posts="this.posts" @newPost="newPost" @close="close" @comment="addComment" @liked="like" @id="newComment" :newCommentSection="this.newCommentSection" :newPostSection="this.newPostSection" />
+            <Posts class="block" :posts="this.posts" @newPost="newPost" @close="close" @comment="addComment" @liked="like" @id="newComment" @deletedPost="deletedPost" :newCommentSection="this.newCommentSection" :newPostSection="this.newPostSection" />
         </div>
     </div>
 </template>
@@ -27,6 +27,7 @@ export default {
             newPostSection: false,
             newCommentSection: false,
             id: '',
+            nPost:{},
         }
     },
     components: {
@@ -48,8 +49,41 @@ export default {
             const myPosts = data['posts']
             myPosts.map((post) => {
                 post['comment'] = post['comment'].split('/')
+
             })
             return myPosts
+        },
+        async deletedPost(id) {
+            await fetch(`http://127.0.0.1:5000/posts/delete/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-type': 'application/json' },
+            })
+            this.posts = await this.fetchPosts()
+        },
+        async like(id) {
+            await fetch(`http://127.0.0.1:5000/posts/editlike/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-type': 'application/json' },
+            })
+            this.posts = await this.fetchPosts()
+        },
+        async addComment(ncomment) {
+            this.posts.map((post) => {
+                if (post.id == this.id) {
+                    this.nPost.id = post.id,
+                        this.nPost.title = post.title,
+                        this.nPost.content = post.content,
+                        this.nPost.status = post.status,
+                        this.nPost.comment = ncomment
+                }
+            });
+            await fetch('http://127.0.0.1:5000/posts/editcomment/', {
+                method: 'PUT',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify(this.nPost)
+            }),
+                this.newCommentSection = !this.newCommentSection
+                this.posts = await this.fetchPosts()
         },
         show() {
             this.newPostSection = !this.newPostSection
@@ -61,24 +95,9 @@ export default {
             this.newCommentSection = !this.newCommentSection
             this.id = id
         },
-        addComment(ncomment) {
-            this.posts.map((post) => {
-                if (post.id == this.id) {
-                    post.comment.push(ncomment)
-                }
-            })
-            this.newCommentSection = !this.newCommentSection
-        },
         logout() {
             router.push({ path: '/' })
         },
-        like(id) {
-            this.posts.map((post) => {
-                if (post.id == id) {
-                    post.status = !post.status
-                }
-            })
-        }
     },
     async created() {
         this.posts = await this.fetchPosts()
