@@ -25,8 +25,8 @@
                     </span>
                 </div>
             </div>
-            <div v-if="(post.comments.length > 0)" >
-                <span :key="comment" v-for="comment in post.comments">
+            <div v-if="(post.comment.length > 0)" >
+                <span :key="comment" v-for="comment in post.comment">
                     <p class="text-xs lg:text-sm  px-2 bg-gray-200 rounded-full mt-0.5 mb-1">{{comment}}</p>
                 </span>
             </div>
@@ -72,11 +72,11 @@ export default {
     methods:{
         post(){
             const newPost = {
-                id: ((Math.random()) * 10000).toFixed(0),
+                // id: ((Math.random()) * 10000).toFixed(0),
                 title: this.title,
                 content: this.content,
                 status: false,
-                comments:[]
+                comment:''
             };
             this.title = '' 
             this.content = ''

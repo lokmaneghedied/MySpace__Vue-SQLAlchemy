@@ -3,7 +3,7 @@
         <header class="border border-gray-200 shadow-xl text-blue-600 bg-white flex justify-between">
             <span class="p-2 truncate font-bold w-1/4 text-xs lg:text-xl">{{$route.params.email}}</span>
             <span>
-                <span v-if="!x">
+                <span v-if="!newPostSection">
                     <button class="btn bg-blue-500 text-xs" @click="show">New Post</button>
                 </span>
                 <button class="btn bg-black text-xs" @click="logout">Log Out</button>
@@ -33,9 +33,23 @@ export default {
         Posts,
     },
     methods: {
-        newPost(post) {
-            this.posts.push(post)
+        async newPost(post) {
+            await fetch('http://127.0.0.1:5000/posts/newPost', {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify(post)
+            })
+            this.posts = await this.fetchPosts()
             this.newPostSection = !this.newPostSection
+        },
+        async fetchPosts() {
+            const res = await fetch('http://127.0.0.1:5000/posts')
+            const data = await res.json()
+            const myPosts = data['posts']
+            myPosts.map((post) => {
+                post['comment'] = post['comment'].split('/')
+            })
+            return myPosts
         },
         show() {
             this.newPostSection = !this.newPostSection
@@ -50,7 +64,7 @@ export default {
         addComment(ncomment) {
             this.posts.map((post) => {
                 if (post.id == this.id) {
-                    post.comments.push(ncomment)
+                    post.comment.push(ncomment)
                 }
             })
             this.newCommentSection = !this.newCommentSection
@@ -65,6 +79,9 @@ export default {
                 }
             })
         }
+    },
+    async created() {
+        this.posts = await this.fetchPosts()
     }
 }
 </script>
