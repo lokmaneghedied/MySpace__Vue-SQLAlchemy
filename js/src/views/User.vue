@@ -10,7 +10,7 @@
             </span> 
         </header>
         <div class="flex justify-center">
-            <Posts class="block" :posts="this.posts" @newPost="newPost" @close="close" @comment="addComment" @liked="like" @id="newComment" @deletedPost="deletedPost" :newCommentSection="this.newCommentSection" :newPostSection="this.newPostSection" />
+            <Posts class="block" :posts="this.posts" :comments="this.comments" @newPost="newPost" @close="close" @addComment="addComment" @liked="like" @id="newComment" @deletedPost="deletedPost" @deletedComment ='deletedComment' :newCommentSection="this.newCommentSection" :newPostSection="this.newPostSection"   :changePostSection="this.changePostSection" @changePost="changePost" @changedPost="changedPost" />
         </div>
     </div>
 </template>
@@ -24,10 +24,11 @@ export default {
     data() {
         return {
             posts: [],
+            comments:[],
             newPostSection: false,
             newCommentSection: false,
+            changePostSection :false,
             id: '',
-            nPost:{},
         }
     },
     components: {
@@ -46,12 +47,7 @@ export default {
         async fetchPosts() {
             const res = await fetch('http://127.0.0.1:5000/posts')
             const data = await res.json()
-            const myPosts = data['posts']
-            myPosts.map((post) => {
-                post['comment'] = post['comment'].split('/')
-
-            })
-            return myPosts
+            return data['posts']
         },
         async deletedPost(id) {
             await fetch(`http://127.0.0.1:5000/posts/delete/${id}`, {
@@ -67,23 +63,46 @@ export default {
             })
             this.posts = await this.fetchPosts()
         },
-        async addComment(ncomment) {
-            this.posts.map((post) => {
-                if (post.id == this.id) {
-                    this.nPost.id = post.id,
-                        this.nPost.title = post.title,
-                        this.nPost.content = post.content,
-                        this.nPost.status = post.status,
-                        this.nPost.comment = ncomment
-                }
-            });
-            await fetch('http://127.0.0.1:5000/posts/editcomment/', {
+        async changedPost(changedPost) {
+            const nPost = {
+                id: this.id,
+                title: changedPost.title,
+                content: changedPost.content
+            }
+            await fetch('http://127.0.0.1:5000/posts/editPost', {
                 method: 'PUT',
                 headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify(this.nPost)
-            }),
-                this.newCommentSection = !this.newCommentSection
-                this.posts = await this.fetchPosts()
+                body: JSON.stringify(nPost)
+            })
+            this.posts = await this.fetchPosts()
+        },
+        async fetchComments() {
+            const res = await fetch('http://127.0.0.1:5000/comments') 
+            const data = await res.json()
+            return data['comments']
+        },
+        async addComment(myComment) {
+            const nComment = {
+                post_id: this.id,
+                content: myComment
+            }
+            if (myComment.length != 0) {
+                await fetch('http://127.0.0.1:5000/comments/newcomment', {
+                    method: 'POST',
+                    headers: { 'Content-type': 'application/json' },
+                    body: JSON.stringify(nComment)
+                })
+            }
+            this.comments = await this.fetchComments()
+            this.newCommentSection = !this.newCommentSection
+        },
+        async deletedComment(id) {
+            await fetch(`http://127.0.0.1:5000/comments/delete/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-type': 'application/json' },
+            })
+            this.comments = await this.fetchComments()
+
         },
         show() {
             this.newPostSection = !this.newPostSection
@@ -95,12 +114,17 @@ export default {
             this.newCommentSection = !this.newCommentSection
             this.id = id
         },
+        changePost(id) {
+            this.changePostSection = !this.changePostSection
+            this.id = id
+        },
         logout() {
             router.push({ path: '/' })
         },
     },
     async created() {
         this.posts = await this.fetchPosts()
+        this.comments = await this.fetchComments()
     }
 }
 </script>

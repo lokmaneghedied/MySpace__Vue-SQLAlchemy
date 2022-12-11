@@ -15,10 +15,18 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     status = db.Column(db.Boolean, nullable=False, default=False)
-    comment = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
         return 'Post' + str(self.id)
+
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, nullable=False)
+    content = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return 'Comment' + str(self.id)
 
 
 with app.app_context():
@@ -36,7 +44,6 @@ def posts():
             'title': post.__dict__['title'],
             'content': post.__dict__['content'],
             'status': post.__dict__['status'],
-            'comment': post.__dict__['comment'],
         }
         all_posts.append(postObject)
     return json.dumps({"posts": all_posts})
@@ -44,41 +51,75 @@ def posts():
 
 @app.route('/posts/newPost', methods=["GET", "POST"])
 @cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
-def newPost():
+def new_post():
     post_title = request.get_json(force=True)['title']
     post_content = request.get_json(force=True)['content']
     post_status = request.get_json(force=True)['status']
-    post_comment = request.get_json(force=True)['comment']
     db.session.add(Post(title=post_title, content=post_content,
-                   status=post_status, comment=post_comment))
+                   status=post_status))
     db.session.commit()
     return "h"
 
 
 @app.route('/posts/delete/<int:id>', methods=["GET", "DELETE"])
 @cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
-def delete(id):
+def delete_post(id):
     post = Post.query.get(id)
     db.session.delete(post)
     db.session.commit()
     return 'h'
 
 
+@app.route('/posts/editPost', methods=["GET", "PUT"])
+@cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
+def edit_post():
+    id = request.get_json(force=True)['id']
+    post = Post.query.get(id)
+    post.title = request.get_json(force=True)['title']
+    post.content = request.get_json(force=True)['content']
+    db.session.commit()
+    return 'h'
+
+
 @app.route('/posts/editlike/<int:id>', methods=["GET", "PUT"])
 @cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
-def like(id):
+def like_post(id):
     post = Post.query.get(id)
     post.status = not post.status
     db.session.commit()
     return 'h'
 
 
-@app.route('/posts/editcomment/', methods=["GET", "PUT"])
+@app.route('/comments', methods=["GET"])
 @cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
-def comment():
-    id = request.get_json(force=True)['id']
-    post = Post.query.get(id)
-    post.comment = post.comment + '/' + request.get_json(force=True)['comment']
+def comments():
+    comments = Comment.query.all()
+    all_comments = []
+    for comment in comments:
+        commentObject = {
+            'id': comment.__dict__['id'],
+            'post_id': comment.__dict__['post_id'],
+            'content': comment.__dict__['content']
+        }
+        all_comments.append(commentObject)
+    return json.dumps({"comments": all_comments})
+
+
+@app.route('/comments/newcomment', methods=["GET", "POST"])
+@cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
+def new_comment():
+    n_post_id = request.get_json(force=True)['post_id']
+    n_content = request.get_json(force=True)['content']
+    db.session.add(Comment(post_id=n_post_id, content=n_content))
+    db.session.commit()
+    return "h"
+
+
+@app.route('/comments/delete/<int:id>', methods=["GET", "DELETE"])
+@cross_origin(origin="localhost", headers=["content-type", "Authorization", "Access-Control-Allow-Origin"])
+def delete_comment(id):
+    comment = Comment.query.get(id)
+    db.session.delete(comment)
     db.session.commit()
     return 'h'
 
