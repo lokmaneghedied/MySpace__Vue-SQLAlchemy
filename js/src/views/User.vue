@@ -75,6 +75,7 @@ export default {
                 body: JSON.stringify(nPost)
             })
             this.posts = await this.fetchPosts()
+            this.changePostSection = !this.changePostSection
         },
         async fetchComments() {
             const res = await fetch('http://127.0.0.1:5000/comments') 
