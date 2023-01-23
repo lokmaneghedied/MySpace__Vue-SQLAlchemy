@@ -1,6 +1,6 @@
 <template>
-    <footer>
-        <p>hahahahah</p>
+    <footer class="flex justify-center	">
+        <p>Created by Lokmane Ghedied</p>
     </footer>
 </template>
 
