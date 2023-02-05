@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  vue:
+    build: ./js
+    image: vue_i
+    container_name: vue_c
+    ports:
+      - "8080:8080"
+    volumes:
+      - /home/lokmane/Documents/projects/MySpace__Vue-SQLAlchemy/js:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+  python:
+    build: ./py
+    image: python_i
+    container_name: python_c
+    ports:
+      - "5000:5000"
+    volumes:
+      - /home/lokmane/Documents/projects/MySpace__Vue-SQLAlchemy/py:/app

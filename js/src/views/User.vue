@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         async newPost(post) {
-            await fetch('http://127.0.0.1:5000/posts/newPost', {
+            await fetch('http://localhost:5000/posts/newPost', {
                 method: 'POST',
                 headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(post)
@@ -45,19 +45,19 @@ export default {
             this.newPostSection = !this.newPostSection
         },
         async fetchPosts() {
-            const res = await fetch('http://127.0.0.1:5000/posts')
+            const res = await fetch('http://localhost:5000/posts')
             const data = await res.json()
             return data['posts']
         },
         async deletedPost(id) {
-            await fetch(`http://127.0.0.1:5000/posts/delete/${id}`, {
+            await fetch(`http://localhost:5000/posts/delete/${id}`, {
                 method: 'DELETE',
                 headers: { 'Content-type': 'application/json' },
             })
             this.posts = await this.fetchPosts()
         },
         async like(id) {
-            await fetch(`http://127.0.0.1:5000/posts/editlike/${id}`, {
+            await fetch(`http://localhost:5000/posts/editlike/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-type': 'application/json' },
             })
@@ -69,7 +69,7 @@ export default {
                 title: changedPost.title,
                 content: changedPost.content
             }
-            await fetch('http://127.0.0.1:5000/posts/editPost', {
+            await fetch('http://localhost:5000/posts/editPost', {
                 method: 'PUT',
                 headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(nPost)
@@ -78,7 +78,7 @@ export default {
             this.changePostSection = !this.changePostSection
         },
         async fetchComments() {
-            const res = await fetch('http://127.0.0.1:5000/comments') 
+            const res = await fetch('http://localhost:5000/comments') 
             const data = await res.json()
             return data['comments']
         },
@@ -88,7 +88,7 @@ export default {
                 content: myComment
             }
             if (myComment.length != 0) {
-                await fetch('http://127.0.0.1:5000/comments/newcomment', {
+                await fetch('http://localhost:5000/comments/newcomment', {
                     method: 'POST',
                     headers: { 'Content-type': 'application/json' },
                     body: JSON.stringify(nComment)
@@ -98,7 +98,7 @@ export default {
             this.newCommentSection = !this.newCommentSection
         },
         async deletedComment(id) {
-            await fetch(`http://127.0.0.1:5000/comments/delete/${id}`, {
+            await fetch(`http://localhost:5000/comments/delete/${id}`, {
                 method: 'DELETE',
                 headers: { 'Content-type': 'application/json' },
             })
