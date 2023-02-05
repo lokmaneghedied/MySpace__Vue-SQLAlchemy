@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /home/lokmane/Documents/projects/MySpace__Vue-SQLAlchemy/js:/app
+      - ./js:/app
       - /app/node_modules
     stdin_open: true
     tty: true
@@ -18,4 +18,4 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - /home/lokmane/Documents/projects/MySpace__Vue-SQLAlchemy/py:/app
+      - ./py:/app
